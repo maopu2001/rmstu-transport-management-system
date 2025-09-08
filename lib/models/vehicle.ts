@@ -1,13 +1,14 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
 export interface IVehicle extends mongoose.Document {
-  registrationNumber: string
-  type: "BUS" | "MINIBUS"
-  capacity: number
-  driver?: mongoose.Types.ObjectId
-  isActive: boolean
-  createdAt: Date
-  updatedAt: Date
+  registrationNumber: string;
+  busName: string;
+  type: "BUS" | "MINIBUS";
+  capacity: number;
+  driver?: mongoose.Types.ObjectId;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const VehicleSchema = new mongoose.Schema<IVehicle>(
@@ -17,6 +18,11 @@ const VehicleSchema = new mongoose.Schema<IVehicle>(
       required: [true, "Registration number is required"],
       unique: true,
       uppercase: true,
+      trim: true,
+    },
+    busName: {
+      type: String,
+      required: [true, "Bus name is required"],
       trim: true,
     },
     type: {
@@ -40,7 +46,8 @@ const VehicleSchema = new mongoose.Schema<IVehicle>(
   },
   {
     timestamps: true,
-  },
-)
+  }
+);
 
-export default mongoose.models.Vehicle || mongoose.model<IVehicle>("Vehicle", VehicleSchema)
+export default mongoose.models.Vehicle ||
+  mongoose.model<IVehicle>("Vehicle", VehicleSchema);

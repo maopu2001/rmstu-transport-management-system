@@ -70,7 +70,9 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.9",
+    "@types/leaflet": "^1.9.20",
     "@types/node": "^22",
+    "@types/nodemailer": "^7.0.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "postcss": "^8.5",

@@ -1,7 +1,10 @@
-import { z } from "zod"
+import { z } from "zod";
 
 export const requisitionSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters").max(100, "Name must be less than 100 characters"),
+  name: z
+    .string()
+    .min(2, "Name must be at least 2 characters")
+    .max(100, "Name must be less than 100 characters"),
   department: z
     .string()
     .min(2, "Department must be at least 2 characters")
@@ -16,6 +19,7 @@ export const requisitionSchema = z.object({
     .number()
     .min(1, "Number of passengers must be at least 1")
     .max(50, "Number of passengers cannot exceed 50"),
-})
+  userId: z.string().optional(), // Optional user ID for when specified
+});
 
-export type RequisitionFormData = z.infer<typeof requisitionSchema>
+export type RequisitionFormData = z.infer<typeof requisitionSchema>;
