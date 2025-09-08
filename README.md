@@ -1,4 +1,4 @@
-# RMSTU Bus Management System
+# Bus Management System
 
 A comprehensive bus management system built with Next.js, MongoDB, and real-time tracking capabilities.
 
@@ -59,7 +59,7 @@ A comprehensive bus management system built with Next.js, MongoDB, and real-time
 
 ## Technology Stack
 
-- **Frontend**: Next.js 14, React 18, TypeScript
+- **Frontend**: Next.js 15, React 18, TypeScript
 - **Styling**: Tailwind CSS, Shadcn/ui components
 - **Backend**: Next.js API Routes, Node.js
 - **Database**: MongoDB with Mongoose
@@ -82,8 +82,8 @@ A comprehensive bus management system built with Next.js, MongoDB, and real-time
 
 ```bash
 # Clone the repository
-git clone <repository-url>
-cd rmstu-bus-system
+git clone [repository-url]
+cd bus-management-system
 
 # Install dependencies
 pnpm install
@@ -98,7 +98,7 @@ Edit `.env.local` with your settings:
 
 ```env
 # Database
-MONGODB_URI=mongodb://localhost:27017/rmstu-bus-system
+MONGODB_URI=mongodb://localhost:27017/bus-management-system
 
 # Authentication
 NEXTAUTH_URL=http://localhost:3000
@@ -212,7 +212,7 @@ The application is fully responsive and works on:
 Set these in your production environment:
 
 ```env
-MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/rmstu-bus
+MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/bus-management
 NEXTAUTH_URL=https://yourdomain.com
 NEXTAUTH_SECRET=your-production-secret
 EMAIL_USER=noreply@yourdomain.com
@@ -243,9 +243,9 @@ This project is licensed under the MIT License.
 
 For questions or issues:
 
-- Create an issue in the repository
-- Check the documentation
-- Review the API endpoints above
+- Create an issue in the project repository
+- Check the documentation above
+- Review the API endpoints section
 
 ## Changelog
 
