@@ -411,8 +411,31 @@ export function ScheduleManagement() {
           </CardContent>
         </Card>
 
-        {/* Dynamic Trips */}
+        {/* Calendar View */}
         <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <CalendarIcon className="h-5 w-5" />
+              <span>Schedule Calendar</span>
+            </CardTitle>
+            <CardDescription>
+              View all scheduled trips in calendar format
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex justify-center">
+              <Calendar
+                mode="single"
+                selected={selectedDate}
+                onSelect={setSelectedDate}
+                className="rounded-md border"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Dynamic Trips */}
+        {/* <Card>
           <CardHeader>
             <div className="flex justify-between items-center">
               <div>
@@ -442,31 +465,8 @@ export function ScheduleManagement() {
               </p>
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
-
-      {/* Calendar View */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <CalendarIcon className="h-5 w-5" />
-            <span>Schedule Calendar</span>
-          </CardTitle>
-          <CardDescription>
-            View all scheduled trips in calendar format
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex justify-center">
-            <Calendar
-              mode="single"
-              selected={selectedDate}
-              onSelect={setSelectedDate}
-              className="rounded-md border"
-            />
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

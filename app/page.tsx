@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { MapPin, Clock, Bus, LogOut } from "lucide-react";
+import { DashboardStats } from "@/components/admin/dashboard-stats";
 
 export default function HomePage() {
   const { data: session, status } = useSession();
@@ -145,27 +146,7 @@ export default function HomePage() {
         </div>
 
         {/* Quick Stats */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-4">System Status</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">5</div>
-              <div className="text-sm text-gray-600">Active Buses</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">12</div>
-              <div className="text-sm text-gray-600">Routes</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-orange-600">3</div>
-              <div className="text-sm text-gray-600">Ongoing Trips</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600">8</div>
-              <div className="text-sm text-gray-600">Pending Requests</div>
-            </div>
-          </div>
-        </div>
+        <DashboardStats />
       </main>
     </div>
   );

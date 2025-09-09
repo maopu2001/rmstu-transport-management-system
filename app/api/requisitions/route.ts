@@ -6,6 +6,8 @@ import Requisition from "@/lib/models/requisition";
 import User from "@/lib/models/user";
 import { requisitionSchema } from "@/lib/validations/requisition";
 import bcrypt from "bcryptjs";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export async function GET() {
   try {
@@ -39,33 +41,34 @@ export async function POST(request: NextRequest) {
 
     await dbConnect();
 
-    // TODO: Get user from session when authentication is restored
-    // const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions);
     // if (!session?.user) {
     //   return NextResponse.json({ error: "Authentication required" }, { status: 401 });
     // }
 
+    // console.log("Session:", session);
+
     // For now, we'll either use a user ID from the request body or create a temporary user
-    let userId = body.userId;
+    let userId = session.user.id;
 
-    if (!userId) {
-      // Create or find a default user for demo purposes
-      let defaultUser = await User.findOne({ email: "student@rmstu.edu.bd" });
+    // if (!userId) {
+    //   // Create or find a default user for demo purposes
+    //   let defaultUser = await User.findOne({ email: "student@rmstu.edu.bd" });
 
-      if (!defaultUser) {
-        // Create a default student user for demo
-        const hashedPassword = await bcrypt.hash("password123", 10);
+    //   if (!defaultUser) {
+    //     // Create a default student user for demo
+    //     const hashedPassword = await bcrypt.hash("password123", 10);
 
-        defaultUser = await User.create({
-          name: "Demo Student",
-          email: "student@rmstu.edu.bd",
-          password: hashedPassword,
-          role: "STUDENT",
-        });
-      }
+    //     defaultUser = await User.create({
+    //       name: "Demo Student",
+    //       email: "student@rmstu.edu.bd",
+    //       password: hashedPassword,
+    //       role: "STUDENT",
+    //     });
+    //   }
 
-      userId = defaultUser._id;
-    }
+    //   userId = defaultUser._id;
+    // }
 
     // Create requisition in database
     const requisition = await Requisition.create({

@@ -13,10 +13,9 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "RMSTU Bus Scheduling System",
-  description: "Dynamic Bus Scheduling System for RMSTU",
-  generator: "v0.app",
-}
+  title: "RMSTU Transport Management System",
+  description: "Dynamic Transport Management System for RMSTU",
+};
 
 export default function RootLayout({
   children,
