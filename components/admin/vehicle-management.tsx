@@ -43,9 +43,18 @@ interface Vehicle {
   status: "Active" | "Inactive" | "Maintenance";
 }
 
+interface Driver {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
 export function VehicleManagement() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [drivers, setDrivers] = useState<Driver[]>([]);
   const [loading, setLoading] = useState(true);
+  const [driversLoading, setDriversLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null);
@@ -57,6 +66,14 @@ export function VehicleManagement() {
     driver: "",
   });
   const { toast } = useToast();
+
+  const getDriverStatus = (driverId: string) => {
+    const assignedVehicle = vehicles.find(
+      (vehicle) =>
+        vehicle.driver?._id === driverId && vehicle._id !== editingVehicle?._id
+    );
+    return assignedVehicle ? `Assigned to "${assignedVehicle.busName}"` : null;
+  };
 
   const fetchVehicles = async () => {
     try {
@@ -75,8 +92,26 @@ export function VehicleManagement() {
     }
   };
 
+  const fetchDrivers = async () => {
+    try {
+      const response = await fetch("/api/drivers");
+      if (!response.ok) throw new Error("Failed to fetch drivers");
+      const data = await response.json();
+      setDrivers(data);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch drivers",
+        variant: "destructive",
+      });
+    } finally {
+      setDriversLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchVehicles();
+    fetchDrivers();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -197,7 +232,18 @@ export function VehicleManagement() {
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button>
+            <Button
+              onClick={() => {
+                setEditingVehicle(null);
+                setFormData({
+                  registrationNumber: "",
+                  busName: "",
+                  type: "BUS",
+                  capacity: "",
+                  driver: "",
+                });
+              }}
+            >
               <Plus className="h-4 w-4 mr-2" />
               Add Vehicle
             </Button>
@@ -285,19 +331,54 @@ export function VehicleManagement() {
                   <Label htmlFor="driver" className="text-right">
                     Driver
                   </Label>
-                  <Input
-                    id="driver"
+                  <Select
                     value={formData.driver}
-                    onChange={(e) =>
-                      setFormData({ ...formData, driver: e.target.value })
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, driver: value })
                     }
-                    className="col-span-3"
-                    placeholder="Optional"
-                  />
+                    disabled={driversLoading}
+                  >
+                    <SelectTrigger className="col-span-3">
+                      <SelectValue
+                        placeholder={
+                          driversLoading
+                            ? "Loading drivers..."
+                            : "Select a driver (optional)"
+                        }
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="None">No driver assigned</SelectItem>
+                      {drivers.map((driver) => {
+                        const status = getDriverStatus(driver._id);
+                        return (
+                          <SelectItem
+                            key={driver._id}
+                            value={driver._id}
+                            disabled={!!status}
+                          >
+                            <div className="flex flex-col">
+                              <span>
+                                {driver.name} ({driver.email})
+                              </span>
+                              {status && (
+                                <span className="text-xs text-muted-foreground">
+                                  {status}
+                                </span>
+                              )}
+                            </div>
+                          </SelectItem>
+                        );
+                      })}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
               <DialogFooter>
-                <Button type="submit">
+                <Button type="submit" disabled={submitting || driversLoading}>
+                  {submitting && (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  )}
                   {editingVehicle ? "Update Vehicle" : "Add Vehicle"}
                 </Button>
               </DialogFooter>

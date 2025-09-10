@@ -4,7 +4,7 @@ import Trip from "@/lib/models/trip";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // TODO: Add authentication back
@@ -17,7 +17,7 @@ export async function POST(
     // }
 
     const { location, status } = await request.json();
-    const vehicleId = params.id;
+    const vehicleId = (await params).id;
 
     if (
       !location ||

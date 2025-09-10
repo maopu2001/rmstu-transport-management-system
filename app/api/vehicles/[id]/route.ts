@@ -53,7 +53,7 @@ export async function PUT(
 
     // Validate driver if provided
     let driverObjectId = null;
-    if (driver) {
+    if (driver && driver !== "None") {
       const driverUser = await User.findOne({ _id: driver, role: "DRIVER" });
       if (!driverUser) {
         return NextResponse.json(
@@ -61,6 +61,22 @@ export async function PUT(
           { status: 400 }
         );
       }
+
+      // Check if driver is already assigned to another vehicle (excluding current vehicle)
+      const existingAssignment = await Vehicle.findOne({
+        driver: driverUser._id,
+        isActive: true,
+        _id: { $ne: vehicleId },
+      });
+      if (existingAssignment) {
+        return NextResponse.json(
+          {
+            error: `This driver is already assigned to vehicle ${existingAssignment.registrationNumber}`,
+          },
+          { status: 400 }
+        );
+      }
+
       driverObjectId = driverUser._id;
     }
 

@@ -2,11 +2,12 @@ import { type NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/db";
-import Schedule from "@/lib/models/schedule";
+import { Schedule, Route, Vehicle, Stop } from "@/lib/models";
 
 export async function GET() {
   try {
     await dbConnect();
+
     const schedules = await Schedule.find({ isActive: true })
       .populate({
         path: "route",

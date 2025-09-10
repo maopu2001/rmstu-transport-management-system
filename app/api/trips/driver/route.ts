@@ -1,15 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/db";
-import Trip from "@/lib/models/trip";
-import Schedule from "@/lib/models/schedule";
+import { Trip, Schedule, Route, Vehicle, Stop } from "@/lib/models";
+
+// Updated with all required model imports
 
 export async function GET(request: NextRequest) {
   try {
-    // TODO: Re-enable authentication
-    // const session = await getServerSession(authOptions)
-    // if (!session?.user || session.user.role !== "DRIVER") {
-    //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    // }
+    const session = await getServerSession(authOptions);
+    const sessionWithUser = session as any;
+
+    if (!sessionWithUser?.user || sessionWithUser.user.role !== "DRIVER") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const driverId = sessionWithUser.user.id;
 
     await dbConnect();
 
@@ -30,11 +36,22 @@ export async function GET(request: NextRequest) {
     const endOfDay = new Date(queryDate);
     endOfDay.setHours(23, 59, 59, 999);
 
-    // For now, we'll get all trips for the date since we don't have driver auth
-    // In production, this should filter by the authenticated driver's vehicle
+    // Find vehicles assigned to the current driver
+    const driverVehicles = await Vehicle.find({
+      driver: driverId,
+      isActive: true,
+    }).select("_id");
 
-    // Find schedules that run on this day
+    const vehicleIds = driverVehicles.map((vehicle) => vehicle._id);
+
+    if (vehicleIds.length === 0) {
+      // Driver has no assigned vehicles
+      return NextResponse.json([]);
+    }
+
+    // Find schedules for the driver's assigned vehicles that run on this day
     const schedulesForToday = await Schedule.find({
+      vehicle: { $in: vehicleIds },
       daysOfWeek: dayOfWeek,
       isActive: true,
     })
@@ -80,6 +97,7 @@ export async function GET(request: NextRequest) {
             departureTime: schedule.departureTime,
           },
           vehicle: {
+            _id: schedule.vehicle._id,
             registrationNumber: schedule.vehicle.registrationNumber,
             busName: schedule.vehicle.busName,
           },
