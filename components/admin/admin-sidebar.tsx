@@ -52,11 +52,6 @@ const navigation = [
     href: "/admin/requisitions",
     icon: FileText,
   },
-  {
-    name: "Reports",
-    href: "/admin/reports",
-    icon: BarChart3,
-  },
 ];
 
 interface AdminSidebarProps {
