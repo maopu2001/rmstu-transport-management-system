@@ -64,7 +64,7 @@ export default function SignInPage() {
           <CardTitle className="text-2xl font-bold">
             RMSTU Transport Management System
           </CardTitle>
-          <CardDescription>Sign in to your account</CardDescription>
+          <CardDescription>Sign in to account</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">

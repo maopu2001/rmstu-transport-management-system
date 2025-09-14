@@ -1,16 +1,21 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Loader2 } from "lucide-react"
+import type React from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2 } from "lucide-react";
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({
@@ -19,28 +24,28 @@ export default function SignUpPage() {
     password: "",
     confirmPassword: "",
     role: "STUDENT",
-  })
-  const [error, setError] = useState("")
-  const [success, setSuccess] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError("")
-    setSuccess("")
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+    setSuccess("");
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match")
-      setIsLoading(false)
-      return
+      setError("Passwords do not match");
+      setIsLoading(false);
+      return;
     }
 
     if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters long")
-      setIsLoading(false)
-      return
+      setError("Password must be at least 6 characters long");
+      setIsLoading(false);
+      return;
     }
 
     try {
@@ -55,28 +60,28 @@ export default function SignUpPage() {
           password: formData.password,
           role: formData.role,
         }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Something went wrong")
+        throw new Error(data.error || "Something went wrong");
       }
 
-      setSuccess("Account created successfully! Redirecting to sign in...")
+      setSuccess("Account created successfully! Redirecting to sign in...");
       setTimeout(() => {
-        router.push("/auth/signin")
-      }, 2000)
+        router.push("/auth/signin");
+      }, 2000);
     } catch (error: any) {
-      setError(error.message)
+      setError(error.message);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
@@ -125,7 +130,7 @@ export default function SignUpPage() {
               />
             </div>
 
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <Label htmlFor="role">Role</Label>
               <Select
                 value={formData.role}
@@ -140,7 +145,7 @@ export default function SignUpPage() {
                   <SelectItem value="ADMIN">Administrator</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
+            </div> */}
 
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>

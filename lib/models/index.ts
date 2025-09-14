@@ -6,9 +6,10 @@ import Stop from "./stop";
 import Schedule from "./schedule";
 import Trip from "./trip";
 import Requisition from "./requisition";
+import Student from "./student";
 
 // Export all models for easy access
-export { User, Vehicle, Route, Stop, Schedule, Trip, Requisition };
+export { User, Vehicle, Route, Stop, Schedule, Trip, Requisition, Student };
 
 // This ensures all models are registered when this module is imported
 export default {
@@ -19,4 +20,5 @@ export default {
   Schedule,
   Trip,
   Requisition,
+  Student,
 };
