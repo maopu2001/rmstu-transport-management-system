@@ -27,6 +27,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Clock, MapPin, Bus, Search, Filter, Loader2 } from "lucide-react";
+import { formatTime } from "@/lib/formatTimeDate";
 
 interface Schedule {
   _id: string;
@@ -255,7 +256,7 @@ export function Schedules() {
                         </div>
                         <div className="flex items-center space-x-1">
                           <Clock className="h-4 w-4" />
-                          <span>{schedule.departureTime}</span>
+                          <span>{formatTime(schedule.departureTime)}</span>
                         </div>
                       </CardDescription>
                     </CardHeader>
@@ -303,19 +304,10 @@ export function Schedules() {
                             Departure:
                           </span>
                           <div className="text-gray-600">
-                            {schedule.departureTime}
+                            {formatTime(schedule.departureTime)}
                           </div>
                         </div>
                       </div>
-
-                      {/* Action Button */}
-                      <Button
-                        variant="outline"
-                        className="w-full bg-transparent"
-                      >
-                        <MapPin className="h-4 w-4 mr-2" />
-                        Track on Map
-                      </Button>
                     </CardContent>
                   </Card>
                 );

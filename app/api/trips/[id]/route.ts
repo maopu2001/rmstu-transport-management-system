@@ -4,10 +4,10 @@ import { Trip, Schedule, Route, Vehicle, Stop } from "@/lib/models";
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const tripId = params.id;
+    const tripId = (await params).id;
     const updates = await request.json();
 
     await dbConnect();
@@ -47,10 +47,10 @@ export async function PUT(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const tripId = params.id;
+    const tripId = (await params).id;
 
     await dbConnect();
 

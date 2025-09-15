@@ -56,6 +56,7 @@ export async function POST(request: NextRequest) {
       email,
       password: hashedPassword,
       role: role || "STUDENT",
+      status: "PENDING", // Self-registered users are pending by default
     });
 
     return NextResponse.json(

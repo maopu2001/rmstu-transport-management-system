@@ -18,6 +18,7 @@ import {
   Menu,
   X,
   Users,
+  UserCog,
 } from "lucide-react";
 
 const navigation = [
@@ -25,6 +26,11 @@ const navigation = [
     name: "Dashboard",
     href: "/admin",
     icon: LayoutDashboard,
+  },
+  {
+    name: "Student Management",
+    href: "/admin/students",
+    icon: UserCog,
   },
   {
     name: "Driver Management",

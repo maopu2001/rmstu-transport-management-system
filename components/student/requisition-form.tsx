@@ -193,7 +193,7 @@ export function RequisitionForm() {
                   <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
                     id="numberOfPassengers"
-                    type="number"
+                    // type="number"
                     min="1"
                     max="50"
                     {...register("numberOfPassengers", { valueAsNumber: true })}

@@ -30,8 +30,11 @@ import {
   Navigation,
   Route,
   Calendar,
+  Map,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { formatTime } from "@/lib/formatTimeDate";
+import { DriverLiveMap } from "@/components/driver/live-map";
 
 interface Schedule {
   _id: string;
@@ -794,17 +797,30 @@ export function MySchedule() {
 
       {/* Tabs for different views */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="my-trips" className="flex items-center space-x-2">
-            <Calendar className="h-4 w-4" />
-            <span>My Trips</span>
+        <TabsList className="grid w-full grid-cols-3 sm:grid-cols-3">
+          <TabsTrigger
+            value="my-trips"
+            className="flex items-center space-x-1 text-xs sm:text-sm"
+          >
+            <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">My Trips</span>
+            <span className="sm:hidden">Trips</span>
           </TabsTrigger>
           <TabsTrigger
             value="all-schedules"
-            className="flex items-center space-x-2"
+            className="flex items-center space-x-1 text-xs sm:text-sm"
           >
-            <Route className="h-4 w-4" />
-            <span>All Schedules</span>
+            <Route className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">All Schedules</span>
+            <span className="sm:hidden">All</span>
+          </TabsTrigger>
+          <TabsTrigger
+            value="live-map"
+            className="flex items-center space-x-1 text-xs sm:text-sm"
+          >
+            <Map className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">Live Map</span>
+            <span className="sm:hidden">Map</span>
           </TabsTrigger>
         </TabsList>
 
@@ -845,7 +861,7 @@ export function MySchedule() {
                     <CardDescription className="flex items-center space-x-4 text-sm">
                       <div className="flex items-center space-x-1">
                         <Clock className="h-4 w-4" />
-                        <span>{trip.schedule.departureTime}</span>
+                        <span>{formatTime(trip.schedule.departureTime)}</span>
                       </div>
                       <div className="flex items-center space-x-1">
                         <MapPin className="h-4 w-4" />
@@ -1098,7 +1114,7 @@ export function MySchedule() {
                     <CardDescription className="flex items-center space-x-4 text-sm">
                       <div className="flex items-center space-x-1">
                         <Clock className="h-4 w-4" />
-                        <span>{schedule.departureTime}</span>
+                        <span>{formatTime(schedule.departureTime)}</span>
                       </div>
                       <div className="flex items-center space-x-1">
                         <MapPin className="h-4 w-4" />
@@ -1148,6 +1164,10 @@ export function MySchedule() {
               ))}
             </div>
           )}
+        </TabsContent>
+
+        <TabsContent value="live-map" className="space-y-4">
+          <DriverLiveMap />
         </TabsContent>
       </Tabs>
     </div>

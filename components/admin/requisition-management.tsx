@@ -28,8 +28,9 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Eye, Check, X, Clock, Loader2 } from "lucide-react";
+import { Eye, Check, X, Clock, Loader2, Edit } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { formatTime } from "@/lib/formatTimeDate";
 
 interface Requisition {
   _id: string;
@@ -305,7 +306,7 @@ export function RequisitionManagement() {
                         {formatDate(requisition.requestedDate)}
                       </div>
                       <div className="text-sm text-gray-500">
-                        {requisition.requestedTime}
+                        {formatTime(requisition.requestedTime)}
                       </div>
                     </div>
                   </TableCell>
@@ -328,7 +329,7 @@ export function RequisitionManagement() {
                       size="sm"
                       onClick={() => handleViewDetails(requisition)}
                     >
-                      <Eye className="h-4 w-4" />
+                      <Edit className="h-4 w-4" />
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -389,7 +390,7 @@ export function RequisitionManagement() {
                   <Label className="text-sm font-medium text-gray-500">
                     Requested Time
                   </Label>
-                  <p className="text-sm">{selectedRequisition.requestedTime}</p>
+                  <p className="text-sm">{formatTime(selectedRequisition.requestedTime)}</p>
                 </div>
 
                 <div>
@@ -429,17 +430,23 @@ export function RequisitionManagement() {
                   value={adminNotes}
                   onChange={(e) => setAdminNotes(e.target.value)}
                   placeholder="Add notes about this requisition..."
-                  className="mt-1"
+                  className="mt-2"
                 />
               </div>
             </div>
           )}
 
           <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsDetailDialogOpen(false)}
+            >
+              Close
+            </Button>
             {selectedRequisition?.status === "PENDING" && (
               <div className="flex space-x-2">
                 <Button
-                  variant="outline"
+                  variant="destructive"
                   onClick={() => handleDeny(selectedRequisition._id)}
                   disabled={submitting}
                 >

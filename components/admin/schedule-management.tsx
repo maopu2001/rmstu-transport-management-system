@@ -33,6 +33,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, Edit, Trash2, CalendarIcon, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { formatDateTime, formatTime } from "@/lib/formatTimeDate";
 
 interface Schedule {
   _id: string;
@@ -232,7 +233,7 @@ export function ScheduleManagement() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid gap-6">
         {/* Regular Schedules */}
         <Card>
           <CardHeader>
@@ -397,7 +398,7 @@ export function ScheduleManagement() {
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="font-medium">
-                      {schedule.departureTime}
+                      {formatTime(schedule.departureTime)}
                     </span>
                     <span className="text-gray-500">
                       {schedule.daysOfWeek
@@ -410,62 +411,6 @@ export function ScheduleManagement() {
             </div>
           </CardContent>
         </Card>
-
-        {/* Calendar View */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <CalendarIcon className="h-5 w-5" />
-              <span>Schedule Calendar</span>
-            </CardTitle>
-            <CardDescription>
-              View all scheduled trips in calendar format
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex justify-center">
-              <Calendar
-                mode="single"
-                selected={selectedDate}
-                onSelect={setSelectedDate}
-                className="rounded-md border"
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Dynamic Trips */}
-        {/* <Card>
-          <CardHeader>
-            <div className="flex justify-between items-center">
-              <div>
-                <CardTitle>Dynamic Trips</CardTitle>
-                <CardDescription>
-                  Special one-time trips for events and special occasions
-                </CardDescription>
-              </div>
-              <Button
-                onClick={() => {
-                  toast({
-                    title: "Dynamic Trips",
-                    description:
-                      "This feature allows creating special one-time trips. Contact admin for setup.",
-                  });
-                }}
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Request Trip
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-center py-8 text-gray-500">
-              <p>
-                Dynamic trip scheduling will be available in a future update.
-              </p>
-            </div>
-          </CardContent>
-        </Card> */}
       </div>
     </div>
   );

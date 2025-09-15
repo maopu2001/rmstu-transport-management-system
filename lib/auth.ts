@@ -1,8 +1,8 @@
-import type { NextAuthOptions } from "next-auth"
-import CredentialsProvider from "next-auth/providers/credentials"
-import bcrypt from "bcryptjs"
-import dbConnect from "./db"
-import User from "./models/user"
+import type { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
+import dbConnect from "./db";
+import User from "./models/user";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -14,21 +14,31 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          return null
+          return null;
         }
 
         try {
-          await dbConnect()
-          const user = await User.findOne({ email: credentials.email })
+          await dbConnect();
+          const user = await User.findOne({ email: credentials.email });
 
           if (!user) {
-            return null
+            return null;
           }
 
-          const isPasswordValid = await bcrypt.compare(credentials.password, user.password)
+          const isPasswordValid = await bcrypt.compare(
+            credentials.password,
+            user.password
+          );
 
           if (!isPasswordValid) {
-            return null
+            return null;
+          }
+
+          // Check if user is active
+          if (user.status !== "ACTIVE") {
+            throw new Error(
+              "Account is not active. Please contact administrator."
+            );
           }
 
           return {
@@ -36,10 +46,13 @@ export const authOptions: NextAuthOptions = {
             email: user.email,
             name: user.name,
             role: user.role,
-          }
+            status: user.status,
+          };
         } catch (error) {
-          console.error("Auth error:", error)
-          return null
+          console.error("Auth error:", error);
+          throw new Error(
+            (error as any).message || "Login failed. Please try again."
+          );
         }
       },
     }),
@@ -50,19 +63,21 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = user.role
+        token.role = user.role;
+        token.status = user.status;
       }
-      return token
+      return token;
     },
     async session({ session, token }) {
       if (token) {
-        session.user.id = token.sub!
-        session.user.role = token.role as string
+        session.user.id = token.sub!;
+        session.user.role = token.role as string;
+        session.user.status = token.status as string;
       }
-      return session
+      return session;
     },
   },
   pages: {
     signIn: "/auth/signin",
   },
-}
+};

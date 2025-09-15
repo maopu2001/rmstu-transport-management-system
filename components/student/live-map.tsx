@@ -23,6 +23,15 @@ L.Icon.Default.mergeOptions({
   shadowUrl: null,
 });
 
+// Create stop marker icon (same as admin panel)
+const stopIcon = L.icon({
+  iconUrl: "/map-marker-icon.svg",
+  iconRetinaUrl: "/map-marker-icon.svg",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+});
+
 interface ActiveBus {
   vehicleId: string;
   registrationNumber: string;
@@ -40,6 +49,18 @@ interface ActiveBus {
     | "DELAYED_OTHER"
     | "ONGOING"
     | "OFFLINE";
+  lastUpdated: Date;
+}
+
+interface BusStop {
+  name: string;
+  description: string;
+  routeName: string;
+  location: {
+    lat: number;
+    lng: number;
+  };
+  isActive: boolean;
   lastUpdated: Date;
 }
 
@@ -85,6 +106,7 @@ export function LiveMap() {
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [selectedBus, setSelectedBus] = useState<ActiveBus | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [stops, setStops] = useState<BusStop[]>([]);
 
   // Function to fetch bus locations from API
   const fetchBusLocations = useCallback(async () => {
@@ -113,6 +135,39 @@ export function LiveMap() {
     } finally {
       setIsLoading(false);
     }
+  }, []);
+
+  const fetchStops = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await fetch("/api/stops");
+      if (response.ok) {
+        const stops = await response.json();
+        const formattedStops = stops.map((stop: any) => {
+          return {
+            name: stop.name,
+            description: stop.description,
+            location: (stop.location as any).coordinates,
+            isActive: stop.isActive,
+          };
+        });
+        setStops(formattedStops);
+      } else {
+        setError("Failed to fetch bus stops");
+        console.error("Failed to fetch bus stops");
+      }
+    } catch (error) {
+      console.error("Error fetching bus stops:", error);
+      setIsConnected(false);
+      setError("Network error occurred");
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchStops();
   }, []);
 
   // Initial load and periodic updates
@@ -229,7 +284,28 @@ export function LiveMap() {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
 
-            {/* Bus Markers */}
+            {/* Stop Markers */}
+            {stops.map((stop: any, index: number) => (
+              <Marker
+                key={`stop-${index}`}
+                position={[stop.location[1], stop.location[0]]} // lat, lng
+                icon={stopIcon}
+              >
+                <Popup>
+                  <div className="p-2">
+                    <h3 className="font-semibold">{stop.name}</h3>
+                    {stop.description && (
+                      <p className="text-sm text-gray-600">
+                        {stop.description}
+                      </p>
+                    )}
+                    <p className="text-xs text-gray-500">Bus Stop</p>
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
+
+            {/* Bus Markers - rendered after stops to appear on top */}
             {busLocations.map((bus: ActiveBus) => (
               <Marker
                 key={bus.vehicleId}
@@ -238,6 +314,7 @@ export function LiveMap() {
                 eventHandlers={{
                   click: () => setSelectedBus(bus),
                 }}
+                zIndexOffset={1000} // Ensure buses are always on top
               >
                 <Popup>
                   <div className="p-2">
@@ -323,7 +400,7 @@ export function LiveMap() {
                     onClick={() => setSelectedBus(bus)}
                   >
                     <CardContent className="p-4">
-                      <div className="flex items-center justify-between mb-2">
+                      <div className="flex flex-wrap gap-2 items-center justify-between mb-2">
                         <div className="flex items-center space-x-2">
                           <Bus className="h-4 w-4" />
                           <span className="font-medium">
@@ -395,7 +472,7 @@ export function LiveMap() {
                   <div className="text-sm">
                     <span className="font-medium">Last Updated:</span>
                     <div className="text-gray-600">
-                      {selectedBus.lastUpdated.toLocaleString()}
+                      {selectedBus.lastUpdated.toLocaleString("en-IN")}
                     </div>
                   </div>
 

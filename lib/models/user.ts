@@ -1,14 +1,16 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
+import { unique } from "next/dist/build/utils";
 
 export interface IUser extends mongoose.Document {
-  name: string
-  email: string
-  password: string
-  role: "ADMIN" | "DRIVER" | "STUDENT"
-  resetToken?: string
-  resetTokenExpiry?: Date
-  createdAt: Date
-  updatedAt: Date
+  name: string;
+  email: string;
+  password: string;
+  role: "ADMIN" | "DRIVER" | "STUDENT";
+  resetToken?: string;
+  resetTokenExpiry?: Date;
+  status: "PENDING" | "ACTIVE" | "INACTIVE" | "SUSPENDED";
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const UserSchema = new mongoose.Schema<IUser>(
@@ -43,10 +45,16 @@ const UserSchema = new mongoose.Schema<IUser>(
       type: Date,
       required: false,
     },
+    status: {
+      type: String,
+      enum: ["PENDING", "ACTIVE", "INACTIVE", "SUSPENDED"],
+      default: "PENDING",
+    },
   },
   {
     timestamps: true,
-  },
-)
+  }
+);
 
-export default mongoose.models.User || mongoose.model<IUser>("User", UserSchema)
+export default mongoose.models.User ||
+  mongoose.model<IUser>("User", UserSchema);

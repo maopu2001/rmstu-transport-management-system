@@ -6,7 +6,7 @@ import dbConnect from "@/lib/db";
 import User from "@/lib/models/user";
 import type { Session } from "next-auth";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const session = (await getServerSession(authOptions)) as Session | null;
 
@@ -16,16 +16,29 @@ export async function GET() {
 
     await dbConnect();
 
-    // Get all users with DRIVER role
-    const drivers = await User.find({ role: "DRIVER" })
+    // Get query parameters
+    const { searchParams } = new URL(request.url);
+    const role = searchParams.get("role");
+    const status = searchParams.get("status");
+
+    // Build filter
+    const filter: any = {};
+    if (role) filter.role = role;
+    if (status) filter.status = status;
+
+    // Get all users based on filters
+    const users = await User.find({
+      ...filter,
+      role: { $in: ["STUDENT"] },
+    })
       .select("-password -resetToken -resetTokenExpiry")
       .sort({ createdAt: -1 });
 
-    return NextResponse.json(drivers);
+    return NextResponse.json(users);
   } catch (error) {
-    console.error("Error fetching drivers:", error);
+    console.error("Error fetching users:", error);
     return NextResponse.json(
-      { error: "Failed to fetch drivers" },
+      { error: "Failed to fetch users" },
       { status: 500 }
     );
   }
@@ -39,11 +52,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { name, email, password } = await request.json();
+    const { name, email, password, status } = await request.json();
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !status) {
       return NextResponse.json(
-        { error: "Name, email, and password are required" },
+        { error: "Name, email, password, and status are required" },
         { status: 400 }
       );
     }
@@ -62,32 +75,32 @@ export async function POST(request: NextRequest) {
     // Hash password
     const hashedPassword = await bcryptjs.hash(password, 12);
 
-    // Create new driver
-    const driver = new User({
+    // Create new user
+    const user = new User({
       name,
       email,
       password: hashedPassword,
-      role: "DRIVER",
-      status: "ACTIVE", // Admin-created users are active by default
+      status: status || "ACTIVE",
     });
 
-    await driver.save();
+    await user.save();
 
-    // Return driver without password
-    const driverResponse = {
-      _id: driver._id,
-      name: driver.name,
-      email: driver.email,
-      role: driver.role,
-      createdAt: driver.createdAt,
-      updatedAt: driver.updatedAt,
+    // Return user without password
+    const userResponse = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      status: user.status,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
     };
 
-    return NextResponse.json(driverResponse, { status: 201 });
+    return NextResponse.json(userResponse, { status: 201 });
   } catch (error) {
-    console.error("Error creating driver:", error);
+    console.error("Error creating user:", error);
     return NextResponse.json(
-      { error: "Failed to create driver" },
+      { error: "Failed to create user" },
       { status: 500 }
     );
   }
