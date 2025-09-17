@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 type Notification = {
   _id: string;
@@ -360,6 +361,18 @@ export default function HomePage() {
         {/* Quick Stats */}
         <DashboardStats />
       </main>
+      <footer className="w-full border-t bg-white text-sm text-muted-foreground fixed bottom-0">
+        <div className="container py-1 mx-auto text-center">
+          <div>
+            <span>Developed by Team Zero Or One, RMSTU</span> |{" "}
+            <Link className="hover:text-green-400" href="/details">
+              Site Details
+            </Link>
+          </div>
+          &copy; {new Date().getFullYear()} RMSTU Transport Management System.
+          All rights reserved.
+        </div>
+      </footer>
     </div>
   );
 }
