@@ -360,6 +360,7 @@ export default function HomePage() {
 
         {/* Quick Stats */}
         <DashboardStats />
+        <AboutSection />
       </main>
       <footer className="w-full border-t bg-white text-sm text-muted-foreground fixed bottom-0">
         <div className="container py-1 mx-auto text-center">
@@ -376,3 +377,54 @@ export default function HomePage() {
     </div>
   );
 }
+
+const AboutSection = () => {
+  return (
+    <div className="my-12">
+      <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg p-6 mb-10 space-y-8">
+        <div className="text-center">
+          <h3 className="text-2xl font-bold text-gray-900 mb-4">
+            About RMSTU Transport Management System
+          </h3>
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            A modern, comprehensive solution designed specifically for Rangamati
+            Science and Technology University to efficiently manage campus
+            transportation services with real-time tracking capabilities.
+          </p>
+        </div>
+
+        <div className="text-center">
+          <h4 className="text-xl font-semibold text-gray-900 mb-3">
+            Built for RMSTU Community
+          </h4>
+          <p className="text-gray-700 mb-4 max-w-2xl mx-auto">
+            This system is specifically designed to address the unique
+            transportation needs of Rangamati Science and Technology University,
+            ensuring reliable, efficient, and user-friendly campus mobility
+            solutions.
+          </p>
+          <h2 className="text-lg font-semibold text-gray-900 mb-3">
+            Key Features
+          </h2>
+          <div className="flex flex-wrap justify-center gap-4 text-sm">
+            <Badge variant="secondary" className="px-3 py-1">
+              Real-time GPS Tracking
+            </Badge>
+            <Badge variant="secondary" className="px-3 py-1">
+              Mobile Responsive
+            </Badge>
+            <Badge variant="secondary" className="px-3 py-1">
+              Automated Notifications
+            </Badge>
+            <Badge variant="secondary" className="px-3 py-1">
+              Vehicle Requisition
+            </Badge>
+            <Badge variant="secondary" className="px-3 py-1">
+              Secure & Reliable
+            </Badge>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

@@ -29,6 +29,10 @@ import {
 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "@/hooks/use-toast";
+import Link from "next/link";
+
+const REPO_URL =
+  "https://github.com/maopu2001/rmstu-transport-management-system";
 
 // Feature data for better maintainability
 const features = [
@@ -290,18 +294,21 @@ export default function DetailsPage() {
 
           {/* Action buttons */}
           <div className="flex flex-wrap justify-center gap-4 mt-8">
-            <Button size="lg" className="gap-2">
-              <Github className="h-4 w-4" />
-              View on GitHub
-            </Button>
-            <Button variant="outline" size="lg" className="gap-2">
-              <Download className="h-4 w-4" />
-              Download
-            </Button>
-            <Button variant="outline" size="lg" className="gap-2">
-              <Star className="h-4 w-4" />
-              Star Project
-            </Button>
+            <Link href={REPO_URL} target="_blank">
+              <Button size="lg" className="gap-2">
+                <Github className="h-4 w-4" />
+                View on GitHub
+              </Button>
+            </Link>
+            <Link
+              href={`${REPO_URL}/archive/refs/heads/main.zip`}
+              target="_blank"
+            >
+              <Button variant="outline" size="lg" className="gap-2">
+                <Download className="h-4 w-4" />
+                Download
+              </Button>
+            </Link>
           </div>
         </div>
 
@@ -569,7 +576,7 @@ export default function DetailsPage() {
                 <CardContent>
                   <div className="space-y-4">
                     <div className="relative">
-                      <ScrollArea className="h-32">
+                      <ScrollArea className="h-full">
                         <pre className="bg-muted p-4 rounded-lg text-sm font-mono overflow-x-auto">
                           {codeSnippets.installation}
                         </pre>
@@ -592,10 +599,6 @@ export default function DetailsPage() {
                         )}
                       </Button>
                     </div>
-                    <Button className="w-full gap-2">
-                      <Play className="h-4 w-4" />
-                      Run Installation
-                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -844,30 +847,39 @@ console.log(data.vehicles);`}
                   Development
                 </h4>
                 <div className="space-y-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-full justify-start"
+                  <Link href={REPO_URL} target="_blank">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full justify-start"
+                    >
+                      <ExternalLink className="h-4 w-4 mr-2" />
+                      GitHub Repository
+                    </Button>
+                  </Link>
+                  <Link
+                    href={`${REPO_URL}/blob/main/README.md`}
+                    target="_blank"
                   >
-                    <ExternalLink className="h-4 w-4 mr-2" />
-                    GitHub Repository
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-full justify-start"
-                  >
-                    <BookOpen className="h-4 w-4 mr-2" />
-                    Documentation
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-full justify-start"
-                  >
-                    <AlertCircle className="h-4 w-4 mr-2" />
-                    Report Issues
-                  </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full justify-start"
+                    >
+                      <BookOpen className="h-4 w-4 mr-2" />
+                      Documentation
+                    </Button>
+                  </Link>
+                  <Link href={`${REPO_URL}/issues`} target="_blank">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full justify-start"
+                    >
+                      <AlertCircle className="h-4 w-4 mr-2" />
+                      Report Issues
+                    </Button>
+                  </Link>
                 </div>
               </div>
 
